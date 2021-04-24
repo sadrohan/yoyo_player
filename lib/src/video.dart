@@ -427,17 +427,16 @@ class _YoYoPlayerState extends State<YoYoPlayer> with SingleTickerProviderStateM
 
     matches.forEach(
       (RegExpMatch regExpMatch) async {
-        String quality = (regExpMatch.group(1)).toString();
-        String sourceURL = (regExpMatch.group(3)).toString();
+        String? quality = regExpMatch.group(1);
+        String? sourceURL = regExpMatch.group(3);
         final RegExp netRegex = new RegExp(RegexResponse.regexURL);
         final RegExp netRegex2 = new RegExp(RegexResponse.regexURL);
-        final bool isNetwork = netRegex.hasMatch(sourceURL);
+        final bool isNetwork = netRegex.hasMatch(sourceURL!);
         final RegExpMatch? match = netRegex2.firstMatch(video);
         String url;
         if (isNetwork) {
           url = sourceURL;
         } else {
-          print(match);
           final String? dataURL = match!.group(0);
           url = "$dataURL$sourceURL";
           print("--- hls child url integration ---\nchild url :$url");
@@ -476,8 +475,6 @@ class _YoYoPlayerState extends State<YoYoPlayer> with SingleTickerProviderStateM
         } catch (e) {
           print("Couldn't write file");
         }
-        print("--- $quality ---");
-        print("--- $url ---");
         yoyo.add(M3U8pass(dataQuality: quality, dataURL: url));
       },
     );
